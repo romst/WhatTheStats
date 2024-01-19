@@ -37,9 +37,21 @@ function Widget:SetFullWidth(bool) end
 ---@param bool boolean
 function Widget:SetFullHeight(bool) end
 
+---@class WidgetContainer:Widget
+local WidgetContainer = {}
+
+---@param child Widget
+---@param beforeWidget Widget?
+function WidgetContainer:AddChild(child, beforeWidget) end
+
+function WidgetContainer:ReleaseChildren() end
+
+---@param layout "Fill"|"List"|"Flow"
+function WidgetContainer:SetLayout(layout) end
+
 ------------- Frame -------------
 
----@class Frame:Widget
+---@class Frame:WidgetContainer
 local Frame = {}
 
 ---@param title string
@@ -48,15 +60,9 @@ function Frame:SetTitle(title) end
 ---@param statusText string
 function Frame:SetStatusText(statusText) end
 
----@param layout "Fill"|"List"|"Flow"
-function Frame:SetLayout(layout) end
-
 ---@param event string
 ---@param callback function
 function Frame:SetCallback(event, callback) end
-
----@param child Widget
-function Frame:AddChild(child) end
 
 ------------- Button -------------
 
@@ -130,7 +136,7 @@ function TabGroup:SetLayout(layout) end
 function TabGroup:SetCallback(event, callback) end
 
 ---@param tbl {text: string, value: string}[] text: label of tab; value: identifier of tab
-function Label:SetTabs(tbl) end
+function TabGroup:SetTabs(tbl) end
 
 ---@param tab string identifier of tab
-function Label:SelectTab(tab) end
+function TabGroup:SelectTab(tab) end
