@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: What the stats?
+## Author: Kaozak
+## Version: 0.1
+
+## SavedVariables: WhatTheStatsDB
+
+embeds.xml
+WhatTheStats.lua
