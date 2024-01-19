@@ -479,7 +479,7 @@ function Addon:OnEnable()
 
         if not id then return end
 
-        local spellData = Addon.db.global[id]
+        local spellData = Addon.db.global.abilities[id]
 
         Addon:Process(self, spellData)
     end)
@@ -497,7 +497,7 @@ end
 
 function Addon:Process(tooltip, spellData)
     tooltip:AddLine(" ")
-    if spellData.maintained then
+    if spellData and spellData.maintained then
         for _, func in ipairs(spellData.tooltip) do
             local callback = FunctionText[func]
 
@@ -567,7 +567,7 @@ function UI:Open(spellId)
     local spellName, spellRank = GetSpellInfo(spellId)
     f:SetStatusText(spellName .. ", " .. spellRank)
 
-    local spellData = Addon.db.global[spellId]
+    local spellData = Addon.db.global.abilities[spellId]
 
     local editbox = AceGUI:Create("MultiLineEditBox")
     editbox:SetLabel("Data")
@@ -582,7 +582,7 @@ function UI:Open(spellId)
             return
         end
 
-        Addon.db.global[spellId] = newSpellData
+        Addon.db.global.abilities[spellId] = newSpellData
     end)
     f:AddChild(editbox)
 end
