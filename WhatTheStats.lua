@@ -67,7 +67,7 @@ end
 
 ---@class SpellEntry
 local DefaultSpellEntry = { -- spellId
-    maintained = false,
+    active = false,
 
     school = 0,
     spellType = 0,
@@ -500,7 +500,7 @@ end
 
 function Addon:Process(tooltip, spellData)
     tooltip:AddLine(" ")
-    if spellData and spellData.maintained then
+    if spellData and spellData.active then
         for _, func in ipairs(spellData.tooltip) do
             local callback = wts.text[func]
 
@@ -524,8 +524,6 @@ function Addon:Process(tooltip, spellData)
                     leftR, leftG, leftB)
             end
         end
-    else
-        tooltip:AddLine("spelldata not maintained")
     end
 end
 
@@ -584,11 +582,21 @@ end
 function WTSTabs.SpelldataTab(container, spellId)
     local spellData = Addon.db.global.abilities[spellId]
 
+    local activeCheckBox = AceGUI:Create("CheckBox")
+    activeCheckBox:SetLabel("Active")
+    activeCheckBox:SetValue(spellData.active)
+    activeCheckBox:SetCallback("OnValueChanged", function(widget)
+        Addon.db.global.abilities[spellId].active = widget:GetValue()
+    end)
+    container:AddChild(activeCheckBox)
+
+
     local editbox = AceGUI:Create("MultiLineEditBox")
     editbox:SetLabel("Data")
     editbox:SetText(serializeTable(spellData))
     editbox:SetFullWidth(true)
     editbox:SetFullHeight(true)
+
     --editbox:SetNumLines(50)
     editbox:SetCallback("OnEnterPressed", function(_, _, text)
         local newSpellData = assert(loadstring("return " .. text))()
@@ -600,6 +608,8 @@ function WTSTabs.SpelldataTab(container, spellId)
         Addon.db.global.abilities[spellId] = newSpellData
     end)
     container:AddChild(editbox)
+
+
 
     --[[
     local desc = AceGUI:Create("Label")
@@ -672,7 +682,7 @@ function UI:Open(spellId)
         SelectGroup(container, event, group, spellId)
     end)
     -- Set initial Tab (this will fire the OnGroupSelected callback)
-    tab:SelectTab("Spelldata")
+    tab:SelectTab("SpelldataTab")
 
     -- add to the frame container
     frame:AddChild(tab)
